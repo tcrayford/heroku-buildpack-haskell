@@ -9,27 +9,15 @@ CACHE_DIR=$2
 
 mkdir -p $CACHE_DIR
 
-if [ ! -e $CACHE_DIR/ghc ]; then
-  GHC_URL="http://brianmckenna.org/files/heroku-buildpack-haskell/ghc.tar.gz"
-  echo "-----> Downloading GHC"
-  curl -# --max-time 120 -L "$GHC_URL" | tar xz -C $CACHE_DIR
-fi
+GHC_URL="http://brianmckenna.org/files/heroku-buildpack-haskell/ghc.tar.gz"
+echo "-----> Downloading GHC"
+curl -# --max-time 120 -L "$GHC_URL" | tar xz -C $CACHE_DIR
 
-# Restore GHC registry if available
-if [ -e $CACHE_DIR/dotghc ]; then
-  rm -rf $HOME/.ghc
-  mv $CACHE_DIR/dotghc $HOME/.ghc
-fi
 
 # Restore Cabal cache or download an empty environemt
-if [ -e $CACHE_DIR/cabal ]; then
-  rm -rf $HOME/.cabal
-  mv $CACHE_DIR/cabal $HOME/.cabal
-elif [ ! -e $HOME/.cabal ]; then
-  CABAL_URL="http://brianmckenna.org/files/heroku-buildpack-haskell/cabal.tar.gz"
-  echo "-----> Downloading Cabal"
-  curl -# --max-time 120 -L "$CABAL_URL" | tar xz -C $HOME
-fi
+CABAL_URL="http://brianmckenna.org/files/heroku-buildpack-haskell/cabal.tar.gz"
+echo "-----> Downloading Cabal"
+curl -# --max-time 120 -L "$CABAL_URL" | tar xz -C $HOME
 
 mkdir -p $CACHE_DIR/lib
 ln -fs /usr/lib/libgmp.so.3 $CACHE_DIR/lib/libgmp.so
